@@ -1,45 +1,80 @@
-import { getNote, saveNote } from '@/asyncstorage'
+import { getNote, removeNote, saveNote } from '@/asyncstorage'
 import { useFocusEffect } from '@react-navigation/native'
+import { useLocalSearchParams } from 'expo-router'
 import React, { useEffect } from 'react'
 import { Alert, Button, StyleSheet, Text, TextInput } from 'react-native'
 import DatePicker from 'react-native-date-picker'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-export default function TabTwoScreen({
-  route,
-}: {
-  route: { params: { dateParam: string } }
-}) {
+export default function TabTwoScreen() {
   const [text, setText] = React.useState('')
-
   const [date, setDate] = React.useState(new Date())
   const [open, setOpen] = React.useState(false)
+  const { note: noteString } = useLocalSearchParams()
 
-  // useFocusEffect(
-  //   React.useCallback(() => {
-  //     // ;(async () => {
-  //     console.log(route?.params)
-  //     if (route) {
-  //       Alert.alert(route.toString())
-  //     }
-  //     // })()
-  //   }, [])
-  // )
+  useFocusEffect(
+    React.useCallback(() => {
+      console.log(noteString)
+    }, [noteString])
+  )
+
+  const checkNoteForDate = async () => {
+    const notes = await getNote('notes')
+    if (Array.isArray(notes)) {
+      const pickedDate = date.toLocaleDateString('pl-PL')
+      const existingNote = notes.find(note => note.date === pickedDate)
+      if (existingNote) {
+        setText(existingNote.text)
+      }
+      return existingNote || null
+    }
+  }
 
   useEffect(() => {
-    const checkNoteForDate = async () => {
-      const notes = await getNote('notes')
-      if (Array.isArray(notes)) {
-        const pickedDate = date.toLocaleDateString('pl-PL') // lub dowolny spójny format, jak ISO
-        const existingNote = notes.find(note => note.date === pickedDate)
-        if (existingNote) {
-          setText(existingNote.text)
-        }
-      }
-    }
-
     checkNoteForDate()
   }, [date])
+
+  // Funkcja resetująca zmiany, z potwierdzeniem
+  const handleReset = () => {
+    Alert.alert(
+      'Potwierdzenie resetowania',
+      'Czy na pewno chcesz zresetować zmiany?',
+      [
+        {
+          text: 'Anuluj',
+          style: 'cancel',
+        },
+        {
+          text: 'Tak',
+          onPress: async () => {
+            const val = await checkNoteForDate()
+            if (!val) setText('')
+          },
+        },
+      ]
+    )
+  }
+
+  // Funkcja usuwająca notatkę, z potwierdzeniem
+  const handleRemove = () => {
+    Alert.alert(
+      'Potwierdzenie usunięcia',
+      'Czy na pewno chcesz usunąć tę notatkę?',
+      [
+        {
+          text: 'Anuluj',
+          style: 'cancel',
+        },
+        {
+          text: 'Tak',
+          onPress: async () => {
+            await removeNote(date.toLocaleDateString('pl-PL'))
+            setText("")
+          },
+        },
+      ]
+    )
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -72,14 +107,16 @@ export default function TabTwoScreen({
         onChangeText={setText}
         value={text}
         placeholder="Wpisz coś tutaj..."
-        textAlignVertical="top" // ważne dla Androida, żeby tekst zaczynał się od góry
+        textAlignVertical="top"
       />
       <Button
         title="zapisz notatkę"
         onPress={() =>
-          saveNote('notes', { date: date.toLocaleDateString('pl-PL'), text })
+          text && saveNote({ date: date.toLocaleDateString('pl-PL'), text })
         }
-      ></Button>
+      />
+      <Button title="resetuj zmiany" color="orange" onPress={handleReset} />
+      <Button title="usuń notatkę" color="red" onPress={handleRemove} />
     </SafeAreaView>
   )
 }

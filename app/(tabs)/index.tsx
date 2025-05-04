@@ -1,6 +1,6 @@
 import { getNote } from '@/asyncstorage'
 import { useNavigation } from '@react-navigation/native'
-import { useFocusEffect } from 'expo-router'
+import { useFocusEffect, useRouter } from 'expo-router'
 import React, { useState } from 'react'
 import {
   FlatList,
@@ -12,6 +12,7 @@ import {
 
 export default function HomeScreen() {
   const [notes, setNotes] = useState<{ date: string; text: string }[]>([])
+  const router = useRouter()
   useFocusEffect(
     React.useCallback(() => {
       ;(async () => {
@@ -29,7 +30,11 @@ export default function HomeScreen() {
         keyExtractor={item => item.date}
         renderItem={({ item }) => (
           <TouchableOpacity
-            onPress={() => navigation.navigate('explore', { date: item.date })}
+            onPress={() => {
+              // Serializowanie obiektu do JSON i kodowanie go w URL
+              const noteString = encodeURIComponent(JSON.stringify(item))
+              router.push(`/explore?note=${noteString}`)
+            }}
           >
             <View
               style={{
