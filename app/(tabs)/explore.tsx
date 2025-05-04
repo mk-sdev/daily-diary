@@ -8,9 +8,10 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function TabTwoScreen() {
   const [text, setText] = React.useState('')
+  const [originalText, setOriginalText] = useState('') // Nowy stan przechowujący oryginalny tekst
   const [date, setDate] = React.useState(new Date())
   const [open, setOpen] = React.useState(false)
-  const [noteExists, setNoteExists] = useState(false) // Nowy stan
+  const [noteExists, setNoteExists] = useState(false)
   const { note: noteString } = useLocalSearchParams()
 
   useFocusEffect(
@@ -26,9 +27,12 @@ export default function TabTwoScreen() {
       const existingNote = notes.find(note => note.date === pickedDate)
       if (existingNote) {
         setText(existingNote.text)
-        setNoteExists(true) // Jeśli notatka istnieje, ustawiamy stan
+        setOriginalText(existingNote.text) // Ustawienie oryginalnego tekstu
+        setNoteExists(true)
       } else {
-        setNoteExists(false) // Jeśli nie ma notatki, ustawiamy stan na false
+        setText('')
+        setOriginalText('') // Brak notatki - resetujemy oryginalny tekst
+        setNoteExists(false)
       }
       return existingNote || null
     }
@@ -38,6 +42,7 @@ export default function TabTwoScreen() {
     checkNoteForDate()
   }, [date])
 
+  // Funkcja resetująca zmiany, z potwierdzeniem
   const handleReset = () => {
     Alert.alert(
       'Potwierdzenie resetowania',
@@ -52,6 +57,7 @@ export default function TabTwoScreen() {
           onPress: async () => {
             const val = await checkNoteForDate()
             if (!val) setText('')
+            else setText(originalText) // Przywrócenie oryginalnego tekstu
           },
         },
       ]
@@ -72,12 +78,15 @@ export default function TabTwoScreen() {
           onPress: async () => {
             await removeNote(date.toLocaleDateString('pl-PL'))
             setText('')
-            setNoteExists(false) // Po usunięciu notatki ustawiamy stan na false
+            setNoteExists(false)
           },
         },
       ]
     )
   }
+
+  // Sprawdzanie, czy tekst wprowadzony przez użytkownika różni się od oryginalnego
+  const isResetButtonDisabled = text === originalText
 
   return (
     <SafeAreaView style={styles.container}>
@@ -118,9 +127,13 @@ export default function TabTwoScreen() {
           text && saveNote({ date: date.toLocaleDateString('pl-PL'), text })
         }
       />
-      <Button title="resetuj zmiany" color="orange" onPress={handleReset} />
+      <Button
+        title="resetuj zmiany"
+        color="orange"
+        onPress={handleReset}
+        disabled={isResetButtonDisabled} // Przyciski resetowania będą nieaktywne, jeśli nie ma zmian
+      />
 
-      {/* Wyświetlanie przycisku usuwania tylko, jeśli notatka istnieje */}
       {noteExists && (
         <Button title="usuń notatkę" color="red" onPress={handleRemove} />
       )}
