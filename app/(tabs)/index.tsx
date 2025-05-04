@@ -1,29 +1,49 @@
-import { getValue } from '@/asyncstorage'
+import { getNote } from '@/asyncstorage'
+import { useNavigation } from '@react-navigation/native'
 import { useFocusEffect } from 'expo-router'
 import React, { useState } from 'react'
-import { FlatList, StyleSheet, Text, View } from 'react-native'
+import {
+  FlatList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from 'react-native'
 
 export default function HomeScreen() {
   const [notes, setNotes] = useState<{ date: string; text: string }[]>([])
   useFocusEffect(
     React.useCallback(() => {
       ;(async () => {
-        setNotes((await getValue('notes')) || [])
-        console.log(await getValue('notes'))
+        setNotes((await getNote('notes')) || [])
+        console.log(await getNote('notes'))
       })()
     }, [])
   )
-
+  const navigation = useNavigation()
+  // AsyncStorage.clear()
   return (
     <View>
       <FlatList
         data={notes}
         keyExtractor={item => item.date}
         renderItem={({ item }) => (
-          <View style={{elevation: 2, backgroundColor: 'beige', borderWidth: 1, margin: 10, padding: 5}}>
-            <Text>{item.date}</Text>
-            <Text>{item.text}</Text>
-          </View>
+          <TouchableOpacity
+            onPress={() => navigation.navigate('explore', { date: item.date })}
+          >
+            <View
+              style={{
+                elevation: 2,
+                backgroundColor: 'beige',
+                borderWidth: 1,
+                margin: 10,
+                padding: 5,
+              }}
+            >
+              <Text>{item.date}</Text>
+              <Text>{item.text}</Text>
+            </View>
+          </TouchableOpacity>
         )}
       />
     </View>

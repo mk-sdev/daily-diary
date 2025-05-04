@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
-export async function getValue(key: string) {
+export async function getNote(key: string) {
   try {
     const existingValue = await AsyncStorage.getItem(key)
 
@@ -18,7 +18,7 @@ export async function getValue(key: string) {
   }
 }
 
-export async function removeItem(key: string) {
+export async function removeNote(key: string) {
   try {
     await AsyncStorage.removeItem(key)
     console.log('The key has been deleted successfully: ', key)
@@ -27,16 +27,29 @@ export async function removeItem(key: string) {
   }
 }
 
-export async function addItem(key: string, newValue: any) {
+export async function saveNote(
+  key: string,
+  newValue: { date: string; text: string }
+) {
   try {
-    const existingNotes = await getValue(key)
-    if (existingNotes) {
-      existingNotes.push(newValue)
-      await AsyncStorage.setItem(key, JSON.stringify(existingNotes))
-    } else await AsyncStorage.setItem(key, JSON.stringify([newValue]))
+    const existingNotes = (await getNote(key)) || []
 
-    console.log('New value has been set successfully: ', key, newValue)
+    // Szukamy, czy istnieje notatka z tą samą datą
+    const index = existingNotes.findIndex(
+      (note: { date: string }) => note.date === newValue.date
+    )
+
+    if (index !== -1) {
+      // Nadpisujemy istniejący wpis
+      existingNotes[index] = newValue
+    } else {
+      // Dodajemy nowy
+      existingNotes.unshift(newValue)
+    }
+
+    await AsyncStorage.setItem(key, JSON.stringify(existingNotes))
+    console.log('New value has been set successfully:', key, newValue)
   } catch (e) {
-    console.log('An error occurred while setting the key: ', e)
+    console.log('An error occurred while setting the key:', e)
   }
 }

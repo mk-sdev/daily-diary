@@ -1,14 +1,45 @@
-import { addItem } from '@/asyncstorage'
-import React from 'react'
-import { Button, StyleSheet, Text, TextInput } from 'react-native'
+import { getNote, saveNote } from '@/asyncstorage'
+import { useFocusEffect } from '@react-navigation/native'
+import React, { useEffect } from 'react'
+import { Alert, Button, StyleSheet, Text, TextInput } from 'react-native'
 import DatePicker from 'react-native-date-picker'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-export default function TabTwoScreen() {
+export default function TabTwoScreen({
+  route,
+}: {
+  route: { params: { dateParam: string } }
+}) {
   const [text, setText] = React.useState('')
 
   const [date, setDate] = React.useState(new Date())
   const [open, setOpen] = React.useState(false)
+
+  // useFocusEffect(
+  //   React.useCallback(() => {
+  //     // ;(async () => {
+  //     console.log(route?.params)
+  //     if (route) {
+  //       Alert.alert(route.toString())
+  //     }
+  //     // })()
+  //   }, [])
+  // )
+
+  useEffect(() => {
+    const checkNoteForDate = async () => {
+      const notes = await getNote('notes')
+      if (Array.isArray(notes)) {
+        const pickedDate = date.toLocaleDateString('pl-PL') // lub dowolny spójny format, jak ISO
+        const existingNote = notes.find(note => note.date === pickedDate)
+        if (existingNote) {
+          setText(existingNote.text)
+        }
+      }
+    }
+
+    checkNoteForDate()
+  }, [date])
 
   return (
     <SafeAreaView style={styles.container}>
@@ -20,6 +51,7 @@ export default function TabTwoScreen() {
         onConfirm={date => {
           setOpen(false)
           setDate(date)
+          console.log(date)
         }}
         onCancel={() => {
           setOpen(false)
@@ -43,9 +75,9 @@ export default function TabTwoScreen() {
         textAlignVertical="top" // ważne dla Androida, żeby tekst zaczynał się od góry
       />
       <Button
-        title="dodaj notatkę"
+        title="zapisz notatkę"
         onPress={() =>
-          addItem('notes', { date: date.toLocaleDateString('pl-PL'), text })
+          saveNote('notes', { date: date.toLocaleDateString('pl-PL'), text })
         }
       ></Button>
     </SafeAreaView>
