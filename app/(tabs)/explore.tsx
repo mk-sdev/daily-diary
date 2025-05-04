@@ -11,7 +11,7 @@ export default function TabTwoScreen() {
   const [originalText, setOriginalText] = useState('') // Nowy stan przechowujący oryginalny tekst
   const [date, setDate] = React.useState(new Date())
   const [open, setOpen] = React.useState(false)
-  const [noteExists, setNoteExists] = useState(false)
+  // const [noteExists, setNoteExists] = useState(false)
   const { note: noteString } = useLocalSearchParams()
 
   useFocusEffect(
@@ -28,11 +28,11 @@ export default function TabTwoScreen() {
       if (existingNote) {
         setText(existingNote.text)
         setOriginalText(existingNote.text) // Ustawienie oryginalnego tekstu
-        setNoteExists(true)
+        // setNoteExists(true)
       } else {
         setText('')
         setOriginalText('') // Brak notatki - resetujemy oryginalny tekst
-        setNoteExists(false)
+        // setNoteExists(false)
       }
       return existingNote || null
     }
@@ -41,6 +41,33 @@ export default function TabTwoScreen() {
   useEffect(() => {
     checkNoteForDate()
   }, [date])
+
+  const handleSaveNote = () => {
+    if (text) {
+      if (text !== originalText && originalText) {
+        Alert.alert(
+          'Potwierdzenie nadpisania',
+          'Czy na pewno chcesz nadpisać notatkę?',
+          [
+            {
+              text: 'Anuluj',
+              style: 'cancel',
+            },
+            {
+              text: 'Tak',
+              onPress: async () => {
+                saveNote({ date: date.toLocaleDateString('pl-PL'), text })
+                setOriginalText(text)
+              },
+            },
+          ]
+        )
+      } else {
+        saveNote({ date: date.toLocaleDateString('pl-PL'), text })
+        setOriginalText(text)
+      }
+    } else Alert.alert('Nie można dodać pustej notatki')
+  }
 
   // Funkcja resetująca zmiany, z potwierdzeniem
   const handleReset = () => {
@@ -78,7 +105,8 @@ export default function TabTwoScreen() {
           onPress: async () => {
             await removeNote(date.toLocaleDateString('pl-PL'))
             setText('')
-            setNoteExists(false)
+            setOriginalText('')
+            // setNoteExists(false)
           },
         },
       ]
@@ -122,10 +150,9 @@ export default function TabTwoScreen() {
         textAlignVertical="top"
       />
       <Button
+        disabled={text === originalText}
         title="zapisz notatkę"
-        onPress={() =>
-          text ? saveNote({ date: date.toLocaleDateString('pl-PL'), text }) : Alert.alert("Nie można dodać pustej notatki")
-        }
+        onPress={() => handleSaveNote()}
       />
       <Button
         title="resetuj zmiany"
@@ -134,7 +161,7 @@ export default function TabTwoScreen() {
         disabled={isResetButtonDisabled} // Przyciski resetowania będą nieaktywne, jeśli nie ma zmian
       />
 
-      {noteExists && (
+      {originalText && (
         <Button title="usuń notatkę" color="red" onPress={handleRemove} />
       )}
     </SafeAreaView>
