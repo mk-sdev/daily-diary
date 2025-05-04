@@ -1,7 +1,7 @@
 import { getNote, removeNote, saveNote } from '@/asyncstorage'
 import { useFocusEffect } from '@react-navigation/native'
 import { useLocalSearchParams } from 'expo-router'
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Alert, Button, StyleSheet, Text, TextInput } from 'react-native'
 import DatePicker from 'react-native-date-picker'
 import { SafeAreaView } from 'react-native-safe-area-context'
@@ -10,6 +10,7 @@ export default function TabTwoScreen() {
   const [text, setText] = React.useState('')
   const [date, setDate] = React.useState(new Date())
   const [open, setOpen] = React.useState(false)
+  const [noteExists, setNoteExists] = useState(false) // Nowy stan
   const { note: noteString } = useLocalSearchParams()
 
   useFocusEffect(
@@ -25,6 +26,9 @@ export default function TabTwoScreen() {
       const existingNote = notes.find(note => note.date === pickedDate)
       if (existingNote) {
         setText(existingNote.text)
+        setNoteExists(true) // Jeśli notatka istnieje, ustawiamy stan
+      } else {
+        setNoteExists(false) // Jeśli nie ma notatki, ustawiamy stan na false
       }
       return existingNote || null
     }
@@ -34,7 +38,6 @@ export default function TabTwoScreen() {
     checkNoteForDate()
   }, [date])
 
-  // Funkcja resetująca zmiany, z potwierdzeniem
   const handleReset = () => {
     Alert.alert(
       'Potwierdzenie resetowania',
@@ -55,7 +58,6 @@ export default function TabTwoScreen() {
     )
   }
 
-  // Funkcja usuwająca notatkę, z potwierdzeniem
   const handleRemove = () => {
     Alert.alert(
       'Potwierdzenie usunięcia',
@@ -69,7 +71,8 @@ export default function TabTwoScreen() {
           text: 'Tak',
           onPress: async () => {
             await removeNote(date.toLocaleDateString('pl-PL'))
-            setText("")
+            setText('')
+            setNoteExists(false) // Po usunięciu notatki ustawiamy stan na false
           },
         },
       ]
@@ -116,7 +119,11 @@ export default function TabTwoScreen() {
         }
       />
       <Button title="resetuj zmiany" color="orange" onPress={handleReset} />
-      <Button title="usuń notatkę" color="red" onPress={handleRemove} />
+
+      {/* Wyświetlanie przycisku usuwania tylko, jeśli notatka istnieje */}
+      {noteExists && (
+        <Button title="usuń notatkę" color="red" onPress={handleRemove} />
+      )}
     </SafeAreaView>
   )
 }
