@@ -2,7 +2,7 @@
   "expo": {
     "name": "daily-diary",
     "slug": "daily-diary",
-    "version": "1.0.0",
+    "version": "0.0.1-dev",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
     "scheme": "dailydiary",
@@ -16,7 +16,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.mkaleta.dailydiary"
     },
     "web": {
       "bundler": "metro",
@@ -37,6 +38,18 @@
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "f326864c-5d33-4b1a-9b2d-17a35b8245c6"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/f326864c-5d33-4b1a-9b2d-17a35b8245c6"
     }
   }
 }
