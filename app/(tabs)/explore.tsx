@@ -124,7 +124,7 @@ export default function TabTwoScreen() {
       <Button
         title="zapisz notatkę"
         onPress={() =>
-          text && saveNote({ date: date.toLocaleDateString('pl-PL'), text })
+          text ? saveNote({ date: date.toLocaleDateString('pl-PL'), text }) : Alert.alert("Nie można dodać pustej notatki")
         }
       />
       <Button
