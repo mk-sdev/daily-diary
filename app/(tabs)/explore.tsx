@@ -1,5 +1,6 @@
+import { addItem } from '@/asyncstorage'
 import React from 'react'
-import { StyleSheet, Text, TextInput } from 'react-native'
+import { Button, StyleSheet, Text, TextInput } from 'react-native'
 import DatePicker from 'react-native-date-picker'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
@@ -8,40 +9,6 @@ export default function TabTwoScreen() {
 
   const [date, setDate] = React.useState(new Date())
   const [open, setOpen] = React.useState(false)
-
-  function formatDate(date: Date): string {
-    const dniTygodnia = [
-      'niedziela',
-      'poniedziałek',
-      'wtorek',
-      'środa',
-      'czwartek',
-      'piątek',
-      'sobota',
-    ]
-
-    const miesiace = [
-      'stycznia',
-      'lutego',
-      'marca',
-      'kwietnia',
-      'maja',
-      'czerwca',
-      'lipca',
-      'sierpnia',
-      'września',
-      'października',
-      'listopada',
-      'grudnia',
-    ]
-
-    const dzienTygodnia = dniTygodnia[date.getDay()]
-    const dzien = date.getDate()
-    const miesiac = miesiace[date.getMonth()]
-    const rok = date.getFullYear()
-
-    return `${dzienTygodnia} ${dzien} ${miesiac} ${rok}`
-  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -59,7 +26,12 @@ export default function TabTwoScreen() {
         }}
       />
       <Text style={{ fontSize: 20 }} onPress={() => setOpen(true)}>
-        {formatDate(date)}
+        {date.toLocaleString('pl-PL', {
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+          weekday: 'long',
+        })}
       </Text>
       <TextInput
         style={styles.textArea}
@@ -70,6 +42,12 @@ export default function TabTwoScreen() {
         placeholder="Wpisz coś tutaj..."
         textAlignVertical="top" // ważne dla Androida, żeby tekst zaczynał się od góry
       />
+      <Button
+        title="dodaj notatkę"
+        onPress={() =>
+          addItem('notes', { date: date.toLocaleDateString('pl-PL'), text })
+        }
+      ></Button>
     </SafeAreaView>
   )
 }
@@ -77,7 +55,7 @@ export default function TabTwoScreen() {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    gap: 20
+    gap: 20,
   },
   textArea: {
     height: 150,
