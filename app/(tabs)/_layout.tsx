@@ -1,15 +1,18 @@
-import { Tabs } from 'expo-router';
-import React from 'react';
-import { Platform } from 'react-native';
+import { Tabs } from 'expo-router'
+import React from 'react'
+import { Platform } from 'react-native'
 
-import { HapticTab } from '@/components/HapticTab';
-import { IconSymbol } from '@/components/ui/IconSymbol';
-import TabBarBackground from '@/components/ui/TabBarBackground';
-import { Colors } from '@/constants/Colors';
-import { useColorScheme } from '@/hooks/useColorScheme';
+import { HapticTab } from '@/components/HapticTab'
+import { IconSymbol } from '@/components/ui/IconSymbol'
+import TabBarBackground from '@/components/ui/TabBarBackground'
+import { Colors } from '@/constants/Colors'
+import { useColorScheme } from '@/hooks/useColorScheme'
+import Entypo from '@expo/vector-icons/Entypo'
+import Ionicons from '@expo/vector-icons/Ionicons'
+import Feather from '@expo/vector-icons/Feather'
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  const colorScheme = useColorScheme()
 
   return (
     <Tabs
@@ -25,28 +28,35 @@ export default function TabLayout() {
           },
           default: {},
         }),
-      }}>
+      }}
+    >
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: 'Notatki',
+          tabBarIcon: ({ color }) => (
+            <Entypo name="list" size={28} color={color} />
+          ),
         }}
       />
       <Tabs.Screen
         name="explore"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: 'Dodaj',
+          tabBarIcon: ({ color }) => (
+            <Ionicons name="add-circle" size={30} color={color} />
+          ),
         }}
       />
       <Tabs.Screen
         name="more"
         options={{
-          title: 'More',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: 'Więcej',
+          tabBarIcon: ({ color }) => (
+            <Feather name="more-horizontal" size={30} color={color} />
+          ),
         }}
       />
     </Tabs>
-  );
+  )
 }
