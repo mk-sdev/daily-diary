@@ -1,11 +1,21 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import React from 'react'
-import { Button, View } from 'react-native'
+import React, { useState } from 'react'
+import { Button, TextInput } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function more() {
+  const [ip, setIp] = useState<string>('192.168.247.1')
+
   return (
-    <SafeAreaView style={{justifyContent: 'center', flex:1}}>
+    <SafeAreaView
+      style={{
+        justifyContent: 'center',
+        flex: 1,
+        paddingHorizontal: 50,
+        gap: 20,
+      }}
+    >
+      <TextInput value={ip} onChangeText={value => setIp(value)}></TextInput>
       <Button
         title="wyślij"
         onPress={() => {
@@ -17,7 +27,7 @@ export default function more() {
               const response = await fetch(
                 __DEV__
                   ? 'http://10.0.2.2:5000/upload'
-                  : 'http://192.168.0.10:5000/upload',
+                  : 'http://' + ip + ':5000/upload',
                 {
                   method: 'POST',
                   headers: {
