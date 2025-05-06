@@ -23,7 +23,7 @@ export default function TabTwoScreen() {
   const checkNoteForDate = async () => {
     const notes = await getNote('notes')
     if (Array.isArray(notes)) {
-      const pickedDate = date.toLocaleDateString('pl-PL')
+      const pickedDate = date.toLocaleDateString('en-CA')
       const existingNote = notes.find(note => note.date === pickedDate)
       if (existingNote) {
         setText(existingNote.text)
@@ -56,14 +56,14 @@ export default function TabTwoScreen() {
             {
               text: 'Tak',
               onPress: async () => {
-                saveNote({ date: date.toLocaleDateString('pl-PL'), text })
+                saveNote({ date: date.toLocaleDateString('en-CA'), text })
                 setOriginalText(text)
               },
             },
           ]
         )
       } else {
-        saveNote({ date: date.toLocaleDateString('pl-PL'), text })
+        saveNote({ date: date.toLocaleDateString('en-CA'), text })
         setOriginalText(text)
       }
     } else Alert.alert('Nie można dodać pustej notatki')
@@ -103,7 +103,7 @@ export default function TabTwoScreen() {
         {
           text: 'Tak',
           onPress: async () => {
-            await removeNote(date.toLocaleDateString('pl-PL'))
+            await removeNote(date.toLocaleDateString('en-CA'))
             setText('')
             setOriginalText('')
             // setNoteExists(false)
@@ -133,7 +133,7 @@ export default function TabTwoScreen() {
         }}
       />
       <Text style={{ fontSize: 20 }} onPress={() => setOpen(true)}>
-        {date.toLocaleString('pl-PL', {
+        {date.toLocaleString('en-CA', {
           year: 'numeric',
           month: 'long',
           day: 'numeric',
