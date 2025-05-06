@@ -1,4 +1,5 @@
 import { getNote } from '@/asyncstorage'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useNavigation } from '@react-navigation/native'
 import { useFocusEffect, useRouter } from 'expo-router'
 import React, { useState } from 'react'

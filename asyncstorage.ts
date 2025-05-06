@@ -36,13 +36,12 @@ export async function removeNote(date: string) {
   }
 }
 
-
 export async function saveNote(newValue: Note) {
   try {
     const existingNotes = (await getNote('notes')) || []
 
     // Szukamy, czy istnieje notatka z tą samą datą
-    const index = existingNotes.findIndex(
+    let index = existingNotes.findIndex(
       (note: { date: string }) => note.date === newValue.date
     )
 
@@ -50,9 +49,25 @@ export async function saveNote(newValue: Note) {
       // Nadpisujemy istniejący wpis
       existingNotes[index] = newValue
     } else {
-      // Dodajemy nowy
-      existingNotes.unshift(newValue)
+      // Dodajemy nową notatkę na odpowiednim miejscu
+      const insertionIndex = existingNotes.findIndex(
+        (note: { date: string }) => newValue.date <= note.date
+      )
+
+      if (insertionIndex === -1) {
+        // Jeśli nowa notatka jest najnowsza, dodaj ją na końcu
+        existingNotes.push(newValue)
+      } else {
+        // Wstawiamy nową notatkę w odpowiednie miejsce
+        existingNotes.splice(insertionIndex, 0, newValue)
+      }
     }
+
+    // Sortujemy notatki chronologicznie po dacie
+    existingNotes.sort(
+      (a: Note, b: Note) =>
+        new Date(b.date).getTime() - new Date(a.date).getTime()
+    )
 
     await AsyncStorage.setItem('notes', JSON.stringify(existingNotes))
     console.log('New value has been set successfully:', 'notes', newValue)
