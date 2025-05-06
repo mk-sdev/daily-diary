@@ -2,13 +2,7 @@ import { getNote } from '@/asyncstorage'
 import { useNavigation } from '@react-navigation/native'
 import { useFocusEffect, useRouter } from 'expo-router'
 import React, { useState } from 'react'
-import {
-  FlatList,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-} from 'react-native'
+import { FlatList, Text, TouchableOpacity, View } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function HomeScreen() {
@@ -31,11 +25,11 @@ export default function HomeScreen() {
         keyExtractor={item => item.date}
         renderItem={({ item }) => (
           <TouchableOpacity
-            // onPress={() => {
-            //   // Serializowanie obiektu do JSON i kodowanie go w URL
-            //   const noteString = encodeURIComponent(JSON.stringify(item))
-            //   router.push(`/explore?note=${noteString}`)
-            // }}
+          // onPress={() => {
+          //   // Serializowanie obiektu do JSON i kodowanie go w URL
+          //   const noteString = encodeURIComponent(JSON.stringify(item))
+          //   router.push(`/explore?note=${noteString}`)
+          // }}
           >
             <View
               style={{
@@ -46,10 +40,10 @@ export default function HomeScreen() {
                 margin: 10,
                 padding: 5,
                 borderRadius: 10,
-                paddingHorizontal: 10
+                paddingHorizontal: 10,
               }}
             >
-              <Text style={{fontWeight: 'bold'}}>{item.date}</Text>
+              <Text style={{ fontWeight: 'bold' }}>{item.date}</Text>
               <Text>{item.text}</Text>
             </View>
           </TouchableOpacity>
