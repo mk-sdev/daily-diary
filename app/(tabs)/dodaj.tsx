@@ -18,10 +18,9 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function TabTwoScreen() {
   const [text, setText] = React.useState('')
-  const [originalText, setOriginalText] = useState('') // Nowy stan przechowujący oryginalny tekst
+  const [originalText, setOriginalText] = useState('')
   const [date, setDate] = React.useState(new Date())
   const [open, setOpen] = React.useState(false)
-  // const [noteExists, setNoteExists] = useState(false)
   const { note: noteString } = useLocalSearchParams()
 
   useFocusEffect(
@@ -37,12 +36,10 @@ export default function TabTwoScreen() {
       const existingNote = notes.find(note => note.date === pickedDate)
       if (existingNote) {
         setText(existingNote.text)
-        setOriginalText(existingNote.text) // Ustawienie oryginalnego tekstu
-        // setNoteExists(true)
+        setOriginalText(existingNote.text)
       } else {
         setText('')
-        setOriginalText('') // Brak notatki - resetujemy oryginalny tekst
-        // setNoteExists(false)
+        setOriginalText('')
       }
       return existingNote || null
     }
@@ -94,7 +91,7 @@ export default function TabTwoScreen() {
           onPress: async () => {
             const val = await checkNoteForDate()
             if (!val) setText('')
-            else setText(originalText) // Przywrócenie oryginalnego tekstu
+            else setText(originalText)
           },
         },
       ]
@@ -116,7 +113,6 @@ export default function TabTwoScreen() {
             await removeNote(date.toLocaleDateString('en-CA'))
             setText('')
             setOriginalText('')
-            // setNoteExists(false)
           },
         },
       ]
@@ -159,7 +155,6 @@ export default function TabTwoScreen() {
         </Text>
         <View
           style={{
-            // backgroundColor: 'blue',
             flexDirection: 'row',
             gap: 20,
             paddingRight: 15,
@@ -175,9 +170,8 @@ export default function TabTwoScreen() {
                 padding: 7,
               }}
               onPress={handleReset}
-              disabled={isResetButtonDisabled} // Przyciski resetowania będą nieaktywne, jeśli nie ma zmian
+              disabled={isResetButtonDisabled}
             >
-              {/* <Entypo name="back" size={24} color="orange" /> */}
               <AntDesign
                 name="back"
                 size={24}
@@ -227,7 +221,6 @@ const styles = StyleSheet.create({
   },
   textArea: {
     flex: 1,
-    // height: 150,
     borderColor: '#ccc',
     borderWidth: 1,
     borderRadius: 8,
