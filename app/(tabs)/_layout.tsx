@@ -40,7 +40,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="dodaj"
         options={{
           title: 'Dodaj',
           tabBarIcon: ({ color }) => (
@@ -49,7 +49,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="more"
+        name="więcej"
         options={{
           title: 'Więcej',
           tabBarIcon: ({ color }) => (

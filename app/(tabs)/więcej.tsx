@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { Button, TextInput } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-export default function more() {
+export default function More() {
   const [ip, setIp] = useState<string>('192.168.247.1')
 
   return (
