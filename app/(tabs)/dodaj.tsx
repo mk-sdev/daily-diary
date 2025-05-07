@@ -165,22 +165,26 @@ export default function TabTwoScreen() {
             paddingRight: 15,
           }}
         >
-          <TouchableOpacity
-            style={{
-              backgroundColor: isResetButtonDisabled ? 'lightgray' : '#fcd9b5',
-              borderRadius: 50,
-              padding: 7,
-            }}
-            onPress={handleReset}
-            disabled={isResetButtonDisabled} // Przyciski resetowania będą nieaktywne, jeśli nie ma zmian
-          >
-            {/* <Entypo name="back" size={24} color="orange" /> */}
-            <AntDesign
-              name="back"
-              size={24}
-              color={isResetButtonDisabled ? 'gray' : '#FF7F00'}
-            />
-          </TouchableOpacity>
+          {originalText && (
+            <TouchableOpacity
+              style={{
+                backgroundColor: isResetButtonDisabled
+                  ? 'lightgray'
+                  : '#fcd9b5',
+                borderRadius: 50,
+                padding: 7,
+              }}
+              onPress={handleReset}
+              disabled={isResetButtonDisabled} // Przyciski resetowania będą nieaktywne, jeśli nie ma zmian
+            >
+              {/* <Entypo name="back" size={24} color="orange" /> */}
+              <AntDesign
+                name="back"
+                size={24}
+                color={isResetButtonDisabled ? 'gray' : '#FF7F00'}
+              />
+            </TouchableOpacity>
+          )}
           {originalText && (
             <TouchableOpacity onPress={handleRemove}>
               <Ionicons
