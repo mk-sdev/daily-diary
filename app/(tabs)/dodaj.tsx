@@ -137,6 +137,10 @@ export default function TabTwoScreen() {
         onCancel={() => {
           setOpen(false)
         }}
+        locale="pl-PL"
+        title="Wybierz datę"
+        cancelText='anuluj'
+        confirmText='zatwierdź'
       />
       <View
         style={{
@@ -146,7 +150,7 @@ export default function TabTwoScreen() {
         }}
       >
         <Text style={{ fontSize: 20 }} onPress={() => setOpen(true)}>
-          {date.toLocaleString('en-CA', {
+          {date.toLocaleString('pl-PL', {
             year: 'numeric',
             month: 'long',
             day: 'numeric',
@@ -156,7 +160,7 @@ export default function TabTwoScreen() {
         <View
           style={{
             flexDirection: 'row',
-            gap: 20,
+            gap: 13,
             paddingRight: 15,
           }}
         >
