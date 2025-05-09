@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import React, { useState } from 'react'
-import { Button, TextInput } from 'react-native'
+import { Alert, Button, TextInput } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
 export default function More() {
@@ -37,8 +37,8 @@ export default function More() {
                 }
               )
 
-              const text = await response.text()
-              console.log('Odpowiedź serwera:', text)
+              if (response.ok) Alert.alert('Poprawnie eksportowano notatki!')
+              else Alert.alert('Wystąpił błąd, spórbuj ponownie.')
             } catch (error) {
               console.error('Błąd wysyłania JSON-a:', error)
             }
