@@ -1,8 +1,6 @@
 import { getNote, removeNote, saveNote } from '@/asyncstorage'
 import AntDesign from '@expo/vector-icons/AntDesign'
 import Ionicons from '@expo/vector-icons/Ionicons'
-import { useFocusEffect } from '@react-navigation/native'
-import { useLocalSearchParams } from 'expo-router'
 import React, { useEffect, useState } from 'react'
 import {
   Alert,
@@ -21,13 +19,7 @@ export default function TabTwoScreen() {
   const [originalText, setOriginalText] = useState('')
   const [date, setDate] = React.useState(new Date())
   const [open, setOpen] = React.useState(false)
-  const { note: noteString } = useLocalSearchParams()
 
-  useFocusEffect(
-    React.useCallback(() => {
-      console.log(noteString)
-    }, [noteString])
-  )
 
   const checkNoteForDate = async () => {
     const notes = await getNote('notes')
@@ -132,7 +124,7 @@ export default function TabTwoScreen() {
         onConfirm={date => {
           setOpen(false)
           setDate(date)
-          console.log(date)
+          // console.log(date)
         }}
         onCancel={() => {
           setOpen(false)

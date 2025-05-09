@@ -9,7 +9,6 @@ export default function HomeScreen() {
     React.useCallback(() => {
       ;(async () => {
         setNotes((await getNote('notes')) || [])
-        console.log(await getNote('notes'))
       })()
     }, [])
   )
