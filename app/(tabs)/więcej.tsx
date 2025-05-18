@@ -15,8 +15,13 @@ export default function More() {
         gap: 20,
       }}
     >
-      <TextInput value={ip} onChangeText={value => setIp(value)}></TextInput>
+      <TextInput
+        style={{ color: 'silver', fontSize: 20 }}
+        value={ip}
+        onChangeText={value => setIp(value)}
+      ></TextInput>
       <Button
+        color={'#4f478c'}
         title="wyślij"
         onPress={() => {
           const sendJson = async () => {

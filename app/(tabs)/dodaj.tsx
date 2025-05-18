@@ -20,7 +20,6 @@ export default function TabTwoScreen() {
   const [date, setDate] = React.useState(new Date())
   const [open, setOpen] = React.useState(false)
 
-
   const checkNoteForDate = async () => {
     const notes = await getNote('notes')
     if (Array.isArray(notes)) {
@@ -118,6 +117,7 @@ export default function TabTwoScreen() {
     <SafeAreaView style={styles.container}>
       <DatePicker
         modal
+        theme="dark"
         mode="date"
         open={open}
         date={date}
@@ -131,8 +131,11 @@ export default function TabTwoScreen() {
         }}
         locale="pl-PL"
         title="Wybierz datę"
-        cancelText='anuluj'
-        confirmText='zatwierdź'
+        cancelText="anuluj"
+        confirmText="zatwierdź"
+        textColor="white"
+        // color="white"
+        // style={{ fontSize: 20, fontWeight: 'bold', color: 'silver' }}
       />
       <View
         style={{
@@ -141,7 +144,7 @@ export default function TabTwoScreen() {
           alignItems: 'center',
         }}
       >
-        <Text style={{ fontSize: 20 }} onPress={() => setOpen(true)}>
+        <Text style={{ fontSize: 20, color: 'silver' }} onPress={() => setOpen(true)}>
           {date.toLocaleString('pl-PL', {
             year: 'numeric',
             month: 'long',
@@ -199,11 +202,13 @@ export default function TabTwoScreen() {
         value={text}
         placeholder="Wpisz coś tutaj..."
         textAlignVertical="top"
+        placeholderTextColor={'#999'}
       />
       <Button
         disabled={text === originalText}
         title="zapisz notatkę"
         onPress={() => handleSaveNote()}
+        color={'#4f478c'}
       />
     </SafeAreaView>
   )
@@ -222,5 +227,6 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     padding: 10,
     fontSize: 18,
+    color: 'silver',
   },
 })

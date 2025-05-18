@@ -15,25 +15,26 @@ export default function HomeScreen() {
   // AsyncStorage.clear()
   return (
     <FlatList
-      style={{ height: '100%', marginTop: StatusBar.currentHeight, backgroundColor: 'rgb(250, 250, 250)' }}
+      style={{ height: '100%', marginTop: StatusBar.currentHeight }}
       data={notes}
       keyExtractor={item => item.date}
       renderItem={({ item }) => (
-          <View
-            style={{
-              elevation: 1,
-              backgroundColor: 'rgb(243, 246, 250)',
-              borderWidth: 1,
-              borderColor: 'rgb(156, 171, 177)',
-              margin: 10,
-              padding: 5,
-              borderRadius: 10,
-              paddingHorizontal: 10,
-            }}
-          >
-            <Text style={{ fontWeight: 'bold' }}>{item.date}</Text>
-            <Text>{item.text}</Text>
-          </View>
+        <View
+          style={{
+            elevation: 1,
+            backgroundColor: '#121212',
+
+            // borderWidth: 1,
+            // borderColor: 'rgb(28, 38, 42)',
+            margin: 10,
+            padding: 5,
+            borderRadius: 10,
+            paddingHorizontal: 10,
+          }}
+        >
+          <Text style={{ fontWeight: 'bold', color: '#eee' }}>{item.date}</Text>
+          <Text style={{ color: 'silver' }}>{item.text}</Text>
+        </View>
       )}
     />
   )
