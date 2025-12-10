@@ -3,6 +3,8 @@ import React, { useState } from 'react'
 import { Alert, Button, TextInput } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
+import * as Clipboard from 'expo-clipboard'
+
 export default function More() {
   const [ip, setIp] = useState<string>('192.168.247.1')
 
@@ -51,6 +53,24 @@ export default function More() {
           sendJson()
         }}
       ></Button>
+
+      <Button
+        title="Kopiuj wszystkie dane"
+        onPress={async () => {
+          try {
+            let data = await AsyncStorage.getItem('notes')
+            data = data
+              ? JSON.stringify(JSON.parse(data), null, 2)
+              : 'Brak danych'
+
+            await Clipboard.setStringAsync(data)
+
+            Alert.alert('Skopiowano!', 'Dane zostały zapisane w schowku.')
+          } catch (e) {
+            Alert.alert('Błąd', 'Nie udało się skopiować danych.')
+          }
+        }}
+      />
     </SafeAreaView>
   )
 }
