@@ -1,12 +1,39 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import React, { useState } from 'react'
-import { Alert, Button, TextInput } from 'react-native'
+import { useFocusEffect } from 'expo-router'
+import React, { useCallback, useEffect, useState } from 'react'
+import { Alert, Button, ScrollView, StyleSheet, TextInput } from 'react-native'
 import { SafeAreaView } from 'react-native-safe-area-context'
 
-import * as Clipboard from 'expo-clipboard'
+// import * as Clipboard from 'expo-clipboard'
 
 export default function More() {
   const [ip, setIp] = useState<string>('192.168.247.1')
+
+  const [data, setData] = useState('')
+
+    useFocusEffect(
+      useCallback(() => {
+        let isActive = true
+
+        const loadData = async () => {
+          try {
+            let stored = await AsyncStorage.getItem('notes')
+            stored = stored
+              ? JSON.stringify(JSON.parse(stored), null, 2)
+              : 'Brak danych'
+            if (isActive) setData(stored)
+          } catch (e) {
+            if (isActive) setData('Błąd przy wczytywaniu danych')
+          }
+        }
+
+        loadData()
+
+        return () => {
+          isActive = false // cleanup jeśli screen zniknie
+        }
+      }, [])
+    )
 
   return (
     <SafeAreaView
@@ -54,23 +81,26 @@ export default function More() {
         }}
       ></Button>
 
-      <Button
-        title="Kopiuj wszystkie dane"
-        onPress={async () => {
-          try {
-            let data = await AsyncStorage.getItem('notes')
-            data = data
-              ? JSON.stringify(JSON.parse(data), null, 2)
-              : 'Brak danych'
-
-            await Clipboard.setStringAsync(data)
-
-            Alert.alert('Skopiowano!', 'Dane zostały zapisane w schowku.')
-          } catch (e) {
-            Alert.alert('Błąd', 'Nie udało się skopiować danych.')
-          }
-        }}
-      />
+      <ScrollView>
+        <TextInput
+          style={styles.textarea}
+          multiline
+          editable={true} // użytkownik może zaznaczać i kopiować
+          value={data}
+        />
+      </ScrollView>
     </SafeAreaView>
   )
 }
+
+const styles = StyleSheet.create({
+
+  textarea: {
+    minHeight: 300,
+    borderColor: '#ccc',
+    borderWidth: 1,
+    padding: 10,
+    textAlignVertical: 'top', // dla Androida, aby tekst zaczynał się od góry
+    color: 'white'
+  },
+})
